@@ -1,3 +1,11 @@
+.main-area {
+    display: grid;
+    place-items: center;
+    /* height: 100vh; */
+    padding: 100px;
+    background-color: #FAFDD6;
+}
+
 .login-btn {
     font-size: 1.2rem;
     background-color: #647FBC;
@@ -6,4 +14,57 @@
     padding: 5px;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    width: 200px;
+}
+
+.login-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #AED6CF;
+    width: 500px;
+    height: 60vh;
+    border-radius: 8%;
+}
+
+.login-area-top {
+    font-size: 3rem;
+    font-weight: 700;
+    padding: 30px;
+    border-bottom: 1px solid;
+    margin-bottom: 100px;
+    margin-bottom: 100px;
+}
+
+.login-area-middle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 50px;;
+}
+
+.login-area-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.login-area-bottom img {
+    width: 30px;
+}
+
+.form-control {
+    width: 250px !important;
+    height: 50px !important;
+    padding: 10px !important;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+  font-size: 0.6rem; /* 플로팅된 상태 글자 크기 */
 }
