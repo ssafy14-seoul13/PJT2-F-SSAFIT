@@ -107,7 +107,7 @@ main {
 }
 
 /* 영상 리스트 높이 제한 */
-#videos-container {
-  /* max-height: 100vh; */
+/* #videos-container {
+  max-height: 100vh;
   overflow-y: auto;
-}
+} */

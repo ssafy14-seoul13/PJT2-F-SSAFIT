@@ -118,7 +118,7 @@ async function renderVideos(list = videos) {
     // card 생성
     const card = document.createElement("div");
     card.id = "card-" + v.id;
-    card.className = "card h-100 shadow-lg m-2 p-0";
+    card.className = "card h-100 shadow-lg m-2 p-0 bg-third";
     card.style.width = "20rem";
 
     // 썸네일 이미지 생성
@@ -139,7 +139,7 @@ async function renderVideos(list = videos) {
     channel.textContent = v.channelName;
 
     const badge = document.createElement("span");
-    badge.className = "badge bg-third";
+    badge.className = "badge bg-secondary";
     badge.textContent = v.part;
 
     body.append(title, channel, badge);
