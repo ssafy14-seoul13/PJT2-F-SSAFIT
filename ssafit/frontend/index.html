@@ -1,39 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SSAFIT</title>
-    <!-- css -->
-    <!-- bootstrap -->
+
+    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-    <!-- custom css -->
-    <link rel="stylesheet" href="css/color.css" />
-    <link rel="stylesheet" href="css/style.css" />
-    <!-- font -->
+
+    <!-- Fonts -->
     <link
       href="https://hangeul.pstatic.net/hangeul_static/css/nanum-gothic.css"
       rel="stylesheet"
     />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./css/color.css" />
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <!-- header -->
     <div id="header-container"></div>
-    hellow world!
 
-    
+    <!-- main -->
+    <main>
+      <!-- 대시보드 -->
+      <section id="dashboard" class="container my-4">
+        <div class="row g-3">
+          <!-- 좌측: 시청기록 요약 -->
+          <div class="col-lg-5">
+            <div class="dash-box p-4">
+              <h5 class="mb-4">시청기록</h5>
+              <p class="mb-3">
+                최근 본 영상 수: <span id="watch-count">0</span>개
+              </p>
+              <p class="mb-3">총 시청시간: <span id="watch-time">0</span> 분</p>
+              <p class="small text-muted">
+                가장 많이 본 부위: <span id="fav-part">-</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- 우측: 차트 + 리스트 -->
+          <div class="col-lg-7">
+            <div class="dash-box p-3">
+              <div class="row g-3">
+                <div
+                  class="col-md-6 d-flex align-items-center justify-content-center"
+                >
+                  <canvas id="watchChart" height="200"></canvas>
+                </div>
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center mb-2 gap-2">
+                    <span class="fw-semibold">부위별 시청 목록</span>
+                    <div
+                      id="watchPartChips"
+                      class="ms-auto d-flex flex-wrap gap-1"
+                    ></div>
+                  </div>
+                  <ul id="watchList" class="list-unstyled m-0 watch-list"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 영상 보기 -->
+      <section id="videos-section-module" class="container my-4">
+        <div
+          id="search-and-filter"
+          class="d-flex justify-content-between align-items-baseline mb-3"
+        >
+          <div id="search-bar" class="input-group w-75 mx-auto">
+            <button id="reset-button" class="btn btn-outline-secondary">
+              전체보기
+            </button>
+            <input
+              type="text"
+              id="search-input"
+              class="form-control"
+              placeholder="운동 영상 검색"
+            />
+            <button id="search-button" class="btn btn-primary bg-primary">
+              검색
+            </button>
+            <div class="invalid-feedback">검색 결과가 없습니다.</div>
+          </div>
+          <div class="text-end my-2">
+            <div id="part-filter" class="mb-3"></div>
+          </div>
+        </div>
+
+        <div id="videos-container" class="row justify-content-center g-3">
+          <!-- video cards -->
+        </div>
+      </section>
+    </main>
+
     <!-- footer -->
     <div id="footer-container"></div>
 
-    <!-- scripts -->
-    <!-- custom scripts -->
+    <!-- Scripts -->
     <script src="/ssafit/frontend/js/layout.js"></script>
-    <!-- bootstrap -->
+    <script src="/ssafit/frontend/js/video.js"></script>
+    <!-- 차트 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 대시보드 스크립트 -->
+    <script src="/ssafit/frontend/js/dashboard.js"></script>
+
+    <!-- Bootstrap JS -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
