@@ -1,3 +1,4 @@
+
 const DATA_URL = "/ssafit/frontend/assets/data/video.json";
 
 let videos = [];
@@ -150,7 +151,8 @@ async function renderVideos(list = videos) {
     card.style.cursor = "pointer"; // 마우스 포인터 변경
     card.addEventListener("click", () => {
       const videoId = card.id.replace("card-", "");
-      window.location.href = `/ssafit/frontend/video-view.html?id=${videoId}`;
+      window.location.href = `/ssafit/frontend/pages/videos/video-view.html?id=${videoId}`;
     });
   }
+
 }
