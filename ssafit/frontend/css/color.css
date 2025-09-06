@@ -1,0 +1,37 @@
+/* color.css */
+
+/* 공통 색상 변수 */
+:root {
+  --primary-color: #647FBC;
+  --secondary-color: #91ADC8;
+  --third-color: #AED6CF;
+  --background-color: #FAFDD6;
+}
+
+/* 배경색 */
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+.bg-secondary {
+  background-color: var(--secondary-color) !important;
+}
+.bg-third {
+  background-color: var(--third-color) !important;
+}
+.bg-light {
+  background-color: var(--background-color) !important;
+}
+
+/* 글자색 */
+/* .text-primary {
+  color: var(--primary-color) !important;
+}
+.text-secondary {
+  color: var(--secondary-color) !important;
+}
+.text-light {
+  color: var(--background-color) !important;
+}
+.text-dark {
+  color: var(--text-color) !important;
+} */
