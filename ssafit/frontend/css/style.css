@@ -6,9 +6,9 @@ body {
 
   margin: 0;
   width: 100%;
-  box-sizing: boreder-box;
+  box-sizing: border-box;
 
-  background-color: #FAFDD6;
+  background-color: #fafdd6;
 
   display: grid;
   flex-direction: column;
@@ -74,4 +74,40 @@ main {
 .footer-bear {
   width: 100px;
   margin-bottom: 15px;
+}
+
+/* 상단 박스 공통 */
+.dash-box {
+  background: #ededed;
+  border-radius: 12px;
+}
+.watch-list {
+  max-height: 220px;
+  overflow-y: auto;
+}
+.watch-list li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+.chip {
+  padding: 0.15rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.chip.active {
+  background: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined", monospace;
+}
+
+/* 영상 리스트 높이 제한 */
+#videos-container {
+  /* max-height: 100vh; */
+  overflow-y: auto;
 }
