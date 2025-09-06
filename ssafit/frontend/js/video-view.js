@@ -1,136 +1,150 @@
-// ----- LS helpers -----
-const getJSON = (k, d = null) => {
-  try {
-    const v = localStorage.getItem(k);
-    return v ? JSON.parse(v) : d;
-  } catch {
-    return d;
+// /frontend/js/video-view.js
+const DATA_URL = "/ssafit/frontend/assets/data/video.json";
+const qs  = new URLSearchParams(location.search);
+const vid = qs.get("id");
+
+
+
+/*
+  와 이런 방법도 있구나...
+*/
+// DOM
+const $frame    = document.getElementById("video-frame");
+const $title    = document.getElementById("video-title");
+const $author   = document.getElementById("video-author");
+const $info     = document.getElementById("video-info");
+const $part     = document.getElementById("video-part");
+const $reviews  = document.getElementById("reviews-list");
+const $form     = document.getElementById("review-form");
+const $textarea = document.getElementById("review-content");
+const $search   = document.getElementById("search-form");
+
+// 날짜 포맷
+const fmt = new Intl.DateTimeFormat("ko-KR", { dateStyle: "medium", timeStyle: "short" });
+const REV_KEY = (id) => `ssafit.reviews.${id}`;
+
+init().catch(err => {
+  console.error(err);
+  document.querySelector(".card")?.replaceChildren(
+    Object.assign(document.createElement("p"), { className:"text-danger mb-0", textContent:"오류가 발생했습니다." })
+  );
+});
+
+async function init() {
+  if (!$frame || !$title || !$author || !$info || !$part || !$reviews || !$form || !$textarea || !$search) {
+    throw new Error("필수 요소 누락");
   }
-};
-const setJSON = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
-// ----- Seed if empty (샘플 데이터) -----
-function seedIfNeeded() {
-  const videosKey = "ssafit:videos";
-  const curKey = "ssafit:video:current";
-  if (!getJSON(videosKey)) {
-    const sample = [
-      {
-        id: "v1",
-        title: "스쿼트 기초",
-        author: "홍길동",
-        part: "하체",
-        info: "하체 강화 기본 루틴",
-        youtubeId: "dQw4w9WgXcQ",
-      },
-    ];
-    setJSON(videosKey, sample);
-    setJSON(curKey, "v1");
-    setJSON(`ssafit:reviews:v1`, [
-      {
-        id: crypto.randomUUID(),
-        nickname: "user01",
-        content: "자세 설명이 좋아요",
-        ts: new Date().toISOString(),
-      },
-    ]);
-  }
-  if (!getJSON("ssafit:user")) setJSON("ssafit:user", { nickname: "게스트" });
-}
+  // 검색 → 같은 폴더의 목록 페이지
+  $search.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const q = document.getElementById("q")?.value.trim() ?? "";
+    location.href = `./video-main.html${q ? `?q=${encodeURIComponent(q)}` : ""}`;
+  });
 
-// ----- Video render -----
-function renderVideo(v) {
-  document.getElementById("video-title").textContent = v.title;
-  document.getElementById("video-author").textContent = v.author;
-  document.getElementById("video-info").textContent = v.info || "";
-  document.getElementById("video-part").textContent = v.part || "";
-  document.getElementById(
-    "video-frame"
-  ).src = `https://www.youtube.com/embed/${v.youtubeId}`;
-}
-
-// ----- Reviews -----
-function renderReviews(videoId) {
-  const box = document.getElementById("reviews-list");
-  box.innerHTML = "";
-  const reviews = getJSON(`ssafit:reviews:${videoId}`, []);
-  if (reviews.length === 0) {
-    box.innerHTML = '<p class="text-muted mb-0">첫 리뷰를 남겨보세요.</p>';
+  if (!vid) {
+    document.querySelector(".card").innerHTML = `<p class="text-danger mb-0">잘못된 접근입니다.</p>`;
     return;
   }
-  reviews
-    .sort((a, b) => new Date(b.ts) - new Date(a.ts))
-    .forEach((r) => {
-      const row = document.createElement("div");
-      row.className = "d-flex mb-3 shadow p-2";
-      row.innerHTML = `
-            <img src="" class="rounded-circle me-2" alt="프로필">
-            <div class="flex-grow-1 p-2 rounded">
-              <div class="d-flex justify-content-between">
-                <strong>${escapeHtml(r.nickname)}</strong>
-                <small class="text-muted">${formatTs(r.ts)}</small>
-              </div>
-              <p class="mb-0">${escapeHtml(r.content)}</p>
-            </div>`;
-      box.appendChild(row);
-    });
-}
 
-// ----- Utils -----
-function formatTs(iso) {
-  const d = new Date(iso);
-  const pad = (n) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(
-    d.getHours()
-  )}:${pad(d.getMinutes())}`;
-}
-function escapeHtml(s) {
-  return s.replace(
-    /[&<>"']/g,
-    (m) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[
-        m
-      ])
-  );
-}
-
-// ----- Events -----
-document.addEventListener("DOMContentLoaded", () => {
-  seedIfNeeded();
-
-  // 검색 폼: 쿼리만 저장(다른 페이지에서 사용)
-  const searchForm = document.getElementById("search-form");
-  searchForm.addEventListener("submit", (e) => {
-    const q = document.getElementById("q").value.trim();
-    setJSON("ssafit:search:q", q);
-    // 필요 시 이 페이지에서 검색 처리하려면 e.preventDefault();
-    // e.preventDefault();
+  const videos = await fetch(DATA_URL, { cache: "no-store" }).then(r => {
+    if (!r.ok) throw new Error("영상 데이터 응답 실패");
+    return r.json();
   });
 
-  // 현재 비디오 로드
-  const videos = getJSON("ssafit:videos", []);
-  const currentId = getJSON("ssafit:video:current", videos[0]?.id);
-  const video = videos.find((v) => v.id === currentId) || videos[0];
-  renderVideo(video);
-  renderReviews(video.id);
+  const v = videos.find(x => x.id === vid);
+  if (!v) {
+    document.querySelector(".card").innerHTML = `<p class="text-danger mb-0">영상을 찾을 수 없습니다.</p>`;
+    return;
+  }
 
-  // 리뷰 등록
-  const reviewForm = document.getElementById("review-form");
-  reviewForm.addEventListener("submit", (e) => {
+  // 상세 렌더
+  $frame.src         = v.url;
+  $title.textContent = v.title;
+  $author.textContent= v.channelName;
+  $part.textContent  = v.part;
+  $info.textContent  = `영상 ID: ${v.id}`;
+
+  // 리뷰 렌더
+  renderReviews();
+
+  // 리뷰 작성
+  $form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const content = document.getElementById("review-content").value.trim();
+    const content = $textarea.value.trim();
     if (!content) return;
-    const user = getJSON("ssafit:user", { nickname: "게스트" });
-    const key = `ssafit:reviews:${video.id}`;
-    const arr = getJSON(key, []);
-    arr.push({
-      id: crypto.randomUUID(),
-      nickname: user.nickname,
-      content,
-      ts: new Date().toISOString(),
-    });
-    setJSON(key, arr);
-    document.getElementById("review-content").value = "";
-    renderReviews(video.id);
+    if (content.length > 500) { alert("리뷰는 500자 이내."); return; }
+
+    const list = getReviews();
+    const id = (crypto?.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(16).slice(2);
+    list.push({ id, content, at: Date.now() });
+    setReviews(list);
+    $textarea.value = "";
+    renderReviews();
   });
-});
+}
+
+// ---- 리뷰 스토리지 ----
+function getReviews() {
+  try {
+    return JSON.parse(localStorage.getItem(REV_KEY(vid))) ?? [];
+  } catch {
+    return [];
+  }
+}
+function setReviews(list) {
+  try {
+    localStorage.setItem(REV_KEY(vid), JSON.stringify(list));
+  } catch (e) {
+    console.warn("스토리지 저장 실패", e);
+    alert("저장 공간 부족. 일부 리뷰 삭제 필요.");
+  }
+}
+
+function renderReviews() {
+  const list = getReviews();
+  $reviews.replaceChildren();
+
+  if (!list.length) {
+    const p = document.createElement("p");
+    p.className = "text-muted mb-0";
+    p.textContent = "아직 리뷰가 없습니다.";
+    $reviews.appendChild(p);
+    return;
+  }
+
+  [...list].sort((a,b) => b.at - a.at).forEach(item => {
+    const wrap = document.createElement("div");
+    wrap.className = "d-flex align-items-start gap-2 border-bottom py-2";
+
+    const avatar = document.createElement("img");
+    avatar.src = "https://via.placeholder.com/36";
+    avatar.className = "rounded-circle mt-1";
+    avatar.alt = "작성자";
+    avatar.referrerPolicy = "no-referrer";
+
+    const body = document.createElement("div");
+    const meta = document.createElement("div");
+    meta.className = "small text-muted";
+    meta.textContent = fmt.format(item.at);
+
+    const text = document.createElement("p");
+    text.className = "mb-1";
+    text.textContent = item.content;
+
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "btn btn-sm btn-outline-danger";
+    del.textContent = "삭제";
+    del.addEventListener("click", () => {
+      if (!confirm("이 리뷰를 삭제할까요?")) return;
+      const next = getReviews().filter(r => r.id !== item.id);
+      setReviews(next);
+      renderReviews();
+    });
+
+    body.append(meta, text, del);
+    wrap.append(avatar, body);
+    $reviews.appendChild(wrap);
+  });
+}
