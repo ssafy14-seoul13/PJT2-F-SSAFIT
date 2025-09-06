@@ -81,8 +81,8 @@ function applyFilters() {
     const input = document.getElementById("search-input");
     input.classList.add("is-invalid");
 
-    // 1초 뒤 초기화
-    setTimeout(() => input.classList.remove("is-invalid"), 1200);
+    // 2초 뒤 초기화
+    setTimeout(() => input.classList.remove("is-invalid"), 2000);
     return;
   }
 
@@ -119,7 +119,7 @@ async function renderVideos(list = videos) {
     const card = document.createElement("div");
     card.id = "card-" + v.id;
     card.className = "card h-100 shadow-lg m-2 p-0";
-    card.style.width = "18rem";
+    card.style.width = "20rem";
 
     // 썸네일 이미지 생성
     const thumb = document.createElement("img");
