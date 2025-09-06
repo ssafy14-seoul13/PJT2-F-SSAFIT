@@ -46,6 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
     let valid = true;
 
     // 아이디 유효성 검사
@@ -118,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (!valid) {
-      e.preventDefault();
       return;
     }
 
@@ -138,7 +139,12 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     };
     localStorage.setItem("signupUser", JSON.stringify(userData));
-    // alert("회원가입 데이터가 저장되었습니다!");
+    localStorage.setItem(
+      "loginSession",
+      JSON.stringify({ id: userData.id, isLoggedIn: true })
+    );
+    alert("성공적으로 가입 완료되었습니다!");
+    window.location.href = "/ssafit/frontend/index.html";
   });
 
   // 입력 시 에러 메시지 제거
