@@ -1,7 +1,7 @@
 function loadHTML(id, file) {
   fetch(file)
-    .then(res => res.text())
-    .then(html => {
+    .then((res) => res.text())
+    .then((html) => {
       document.getElementById(id).innerHTML = html;
     });
 }
