@@ -164,5 +164,9 @@ bootstrap의 grid 를 사용해서 반응형으로 만듬 화면 사이즈에 �
 1. 저장소 클론
    ```bash
    git clone https://github.com/ssafy14-seoul13/PJT2-F-SSAFIT
+   cd PJT2-F-SSAFIT
+   code .
    ```
 vscode liveserver 로 index.html 실행
+
+**root 폴더가 `PJT2-F-SSAFT` 임!!!**
